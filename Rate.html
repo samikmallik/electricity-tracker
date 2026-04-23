@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Electricity Rate Tracker</title>
+    <style>
+        body { font-family: sans-serif; text-align: center; padding-top: 50px; }
+        #display { font-size: 2rem; font-weight: bold; margin: 20px; }
+    </style>
+</head>
+<body>
+    <h1>Current Electricity Period</h1>
+    <div id="display">Loading...</div>
+    <script>
+        function updateRate() {
+            const now = new Date();
+            const hours = now.getHours();
+            const day = now.getDay(); // 0 = Sunday, 1 = Monday...
+            let period = "";
+
+            // Logic: 0=Sun, 6=Sat
+            const isWeekend = (day === 0 || day === 6);
+
+            if (hours >= 23 || hours < 7) {
+                period = "Ultra-Low Overnight (3.9 cents/kwh)";
+            } else if (isWeekend) {
+                period = "Weekend Off-Peak (9.8 cents/kwh)";
+            } else if (hours >= 16 && hours < 21) {
+                period = "On-Peak (39.1 cents/kwh)";
+            } else {
+                period = "Mid-Peak (15.7 cents/kwh)";
+            }
+            document.getElementById('display').innerText = period;
+        }
+        setInterval(updateRate, 1000);
+        updateRate();
+    </script>
+</body>
+</html>
