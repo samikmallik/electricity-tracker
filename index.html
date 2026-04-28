@@ -3,36 +3,94 @@
 <head>
     <title>Electricity Rate Tracker</title>
     <style>
-        body { font-family: sans-serif; text-align: center; padding-top: 50px; }
-        #display { font-size: 2rem; font-weight: bold; margin: 20px; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; padding: 20px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { padding: 12px; border: 1px solid #ddd; text-align: left; }
+        th { background-color: #f4f4f4; }
+        
+        /* Highlight Classes - All now include font-weight: bold */
+        .active-row { font-weight: bold; } 
+        .active-ulo { background-color: aqua !important; }
+        .active-weekend { background-color: lightgreen !important; }
+        .active-mid { background-color: #FFBF00 !important; }
+        .active-on { background-color: red !important; color: white; }
     </style>
 </head>
 <body>
-    <h1>Current Electricity Period</h1>
-    <div id="display">Loading...</div>
-    <script>
-        function updateRate() {
-            const now = new Date();
-            const hours = now.getHours();
-            const day = now.getDay(); // 0 = Sunday, 1 = Monday...
-            let period = "";
+    <h1>Current Electricity Period (ULO Plan)</h1>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Period</th>
+                <th>Rate (¢/kWh)</th>
+                <th>Hours</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr id="row-ulo">
+                <td>Ultra-Low Overnight</td>
+                <td>3.9¢</td>
+                <td>11 PM – 7 AM</td>
+            </tr>
+            <tr id="row-weekend">
+                <td>Weekend Off-Peak</td>
+                <td>9.8¢</td>
+                <td>7 AM – 11 PM (Weekends)</td>
+            </tr>
+            <tr id="row-mid">
+                <td>Mid-Peak</td>
+                <td>15.7¢</td>
+                <td>Weekdays 7 AM – 4 PM & 9 PM – 11 PM</td>
+            </tr>
+            <tr id="row-on">
+                <td>On-Peak</td>
+                <td>39.1¢</td>
+                <td>Weekdays 4 PM – 9 PM</td>
+            </tr>
+        </tbody>
+    </table>
 
-            // Logic: 0=Sun, 6=Sat
+    <script>
+        function updateHighlight() {
+            // --- TEST SETTINGS ---
+            const isTesting = false; 
+            const mockHour = 2;     
+            const mockDay = 1;       
+            // ---------------------
+
+            const now = isTesting ? new Date(2026, 3, 28, mockHour, 0) : new Date();
+            const hours = isTesting ? mockHour : now.getHours();
+            const day = isTesting ? mockDay : now.getDay();
             const isWeekend = (day === 0 || day === 6);
 
+            // Reset rows
+            const rows = document.querySelectorAll('tr');
+            rows.forEach(tr => tr.className = '');
+
+            let activeId = "";
+            let activeClass = "";
+
             if (hours >= 23 || hours < 7) {
-                period = "Ultra-Low Overnight (3.9 cents/kwh)";
+                activeId = "row-ulo";
+                activeClass = "active-ulo";
             } else if (isWeekend) {
-                period = "Weekend Off-Peak (9.8 cents/kwh)";
+                activeId = "row-weekend";
+                activeClass = "active-weekend";
             } else if (hours >= 16 && hours < 21) {
-                period = "On-Peak (39.1 cents/kwh)";
+                activeId = "row-on";
+                activeClass = "active-on";
             } else {
-                period = "Mid-Peak (15.7 cents/kwh)";
+                activeId = "row-mid";
+                activeClass = "active-mid";
             }
-            document.getElementById('display').innerText = period;
+
+            // Apply 'active-row' for bolding and the specific color class
+            document.getElementById(activeId).classList.add('active-row', activeClass);
         }
-        setInterval(updateRate, 1000);
-        updateRate();
+
+        setInterval(updateHighlight, 1000);
+        updateHighlight();
     </script>
 </body>
 </html>
