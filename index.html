@@ -44,16 +44,34 @@
             border: none;
         }
 
-        .period-name { font-size: 1.1rem; color: #444; }
-        .rate-value { font-size: 3rem; font-weight: 800; margin: 10px 0; }
-        .hours-range { font-size: 0.9rem; color: #888; }
+        /* UPDATED: Period name is now the largest text */
+        .period-name { 
+            font-size: 2.5rem; 
+            font-weight: 800; 
+            line-height: 1.1;
+            margin-bottom: 10px;
+            color: #222; 
+        }
+
+        /* UPDATED: Rate value is now smaller */
+        .rate-value { 
+            font-size: 1.8rem; 
+            font-weight: 600; 
+            margin-bottom: 5px; 
+        }
+
+        .hours-range { font-size: 1rem; color: #888; }
 
         /* Color Themes */
         .active-ulo { background-color: aqua; }
         .active-weekend { background-color: lightgreen; }
         .active-mid { background-color: #FFBF00; }
         .active-on { background-color: #ff3b30; color: white; }
-        .active-on .hours-range, .active-on .period-name { color: rgba(255,255,255,0.9); }
+        
+        /* Ensure text remains legible on the red background */
+        .active-on .hours-range, 
+        .active-on .period-name, 
+        .active-on .rate-value { color: white; }
 
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
@@ -100,7 +118,7 @@
 
     <script>
         function updateHighlight() {
-            const isTesting = false; // Toggle to true to test
+            const isTesting = false; 
             const mockHour = 18; 
             const mockDay = 1; 
 
@@ -109,7 +127,6 @@
             const day = now.getDay();
             const isWeekend = (day === 0 || day === 6);
 
-            // Remove active class from everything
             document.querySelectorAll('tr').forEach(tr => {
                 tr.classList.remove('active-row', 'active-ulo', 'active-weekend', 'active-mid', 'active-on');
             });
@@ -138,5 +155,3 @@
         setInterval(updateHighlight, 60000);
         updateHighlight();
     </script>
-</body>
-</html>
